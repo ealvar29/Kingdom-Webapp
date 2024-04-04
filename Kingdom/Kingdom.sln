@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kingdom", "Kingdom\Kingdom.csproj", "{832AD862-E743-4A92-BFF3-66568EF42886}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{832AD862-E743-4A92-BFF3-66568EF42886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{832AD862-E743-4A92-BFF3-66568EF42886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{832AD862-E743-4A92-BFF3-66568EF42886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{832AD862-E743-4A92-BFF3-66568EF42886}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE541803-9C2B-4502-953F-206F2DA5BC8C}
+	EndGlobalSection
+EndGlobal
