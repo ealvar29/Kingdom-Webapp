@@ -1,6 +1,14 @@
 <template>
   <div>
-    <input v-model="username" placeholder="Enter name" />
+    <input v-model="roomName" placeholder="Enter room name" />
+    <input
+      v-model="roomPassword"
+      type="password"
+      placeholder="Enter room password"
+    />
+    <button @click="createRoom">Create Room</button>
+    <button @click="joinRoom">Join Room</button>
+
     <input v-model="message" placeholder="Enter message" />
     <button @click="sendMessage">Send Message</button>
     <ul>
@@ -17,7 +25,8 @@ export default {
     return {
       connection: null,
       messages: [],
-      username: "",
+      roomName: "",
+      roomPassword: "",
       message: "",
     };
   },
@@ -33,10 +42,28 @@ export default {
     this.connection.on("ReceiveMessage", (user, message) => {
       this.messages.push(`${user}: ${message}`);
     });
+
+    this.connection.on("RoomCreated", (room) => {
+      alert(`Created and joined room: ${room}`);
+    });
+
+    this.connection.on("JoinedRoom", (room) => {
+      alert(`Joined room: ${room}`);
+    });
+
+    this.connection.on("Error", (error) => {
+      alert(error);
+    });
   },
   methods: {
+    createRoom() {
+      this.connection.invoke("CreateRoom", this.roomName, this.roomPassword);
+    },
+    joinRoom() {
+      this.connection.invoke("JoinRoom", this.roomName, this.roomPassword);
+    },
     sendMessage() {
-      this.connection.invoke("SendMessage", this.username, this.message);
+      this.connection.invoke("SendMessageToRoom", this.roomName, this.message);
     },
   },
 };
