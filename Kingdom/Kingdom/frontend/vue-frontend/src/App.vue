@@ -1,6 +1,7 @@
 <script setup>
 import HelloWorld from "./components/HelloWorld.vue";
 import Weather from "./components/Weather.vue";
+import Chat from "./components/Chat.vue";
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import Weather from "./components/Weather.vue";
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <Weather />
+  <Chat />
 </template>
 
 <style scoped>
