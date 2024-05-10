@@ -1,22 +1,40 @@
 <template>
   <div>
-    <input v-model="roomName" placeholder="Enter room name" />
-    <input
-      v-model="roomPassword"
-      type="password"
-      placeholder="Enter room password"
-    />
-    <button @click="createRoom">Create Room</button>
-    <button @click="joinRoom">Join Room</button>
-
-    <input v-model="message" placeholder="Enter message" />
-    <button @click="sendMessage">Send Message</button>
-    <ul>
-      <li v-for="msg in messages" :key="msg">{{ msg }}</li>
-    </ul>
+    <div class="create">
+      <input v-model="roomName" placeholder="Enter room name" />
+      <input
+        v-model="roomPassword"
+        type="password"
+        placeholder="Enter room password"
+      />
+      <button @click="createRoom">Create Room</button>
+    </div>
+    <div class="enter">
+      <input v-model="roomName" type="password" placeholder="Enter room name" />
+      <input
+        v-model="roomPassword"
+        type="password"
+        placeholder="Enter room password"
+      />
+      <button @click="joinRoom">Join Room</button>
+    </div>
   </div>
 </template>
+<style>
+.create {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+}
 
+.enter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+}
+</style>
 <script>
 import * as signalR from "@microsoft/signalr";
 
