@@ -7,6 +7,18 @@ namespace Kingdom.Models
     {
         private static ConcurrentDictionary<string, ChatRoom> chatRooms = new ConcurrentDictionary<string, ChatRoom>();
 
+        public override Task OnConnectedAsync()
+        {
+            UserHandler.ConnectedIds.Add(Context.ConnectionId);
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            UserHandler.ConnectedIds.Remove(Context.ConnectionId);
+            return base.OnDisconnectedAsync(exception);
+        }
+
         public async Task SendMessage(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
@@ -15,10 +27,17 @@ namespace Kingdom.Models
 
         public async Task CreateRoom(string roomName, string password)
         {
+            OnConnectedAsync();
             var chatRoom = new ChatRoom { RoomName = roomName, Password = password };
             chatRooms.TryAdd(roomName, chatRoom);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-            await Clients.Caller.SendAsync("RoomCreated", roomName);
+            CreatedRoom createdRoom = new CreatedRoom()
+            {
+                Name = roomName,
+                RoomId = Context.ConnectionId,
+                RoomParticipants = UserHandler.ConnectedIds.Count
+            };
+            await Clients.Caller.SendAsync("RoomCreated", createdRoom);
         }
 
         public async Task JoinRoom(string roomName, string password)

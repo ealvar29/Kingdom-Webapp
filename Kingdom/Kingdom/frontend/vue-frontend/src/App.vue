@@ -12,6 +12,7 @@ import Chat from "./components/Chat.vue";
     </a>
   </div>
   <Chat />
+  <div></div>
 </template>
 
 <style scoped>

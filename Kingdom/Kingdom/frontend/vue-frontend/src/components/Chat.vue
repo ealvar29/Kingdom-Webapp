@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!roomCreated">
     <div class="create">
       <input v-model="roomName" placeholder="Enter room name" />
       <input
@@ -18,6 +18,12 @@
       />
       <button @click="joinRoom">Join Room</button>
     </div>
+    <p>Room Created? : {{ roomCreated }}</p>
+    <p>Number of people: {{ numOfPeople }}</p>
+    <p>Room Id: {{ roomId }}</p>
+  </div>
+  <div v-if="roomCreated">
+    <Room :roomName="roomName" />
   </div>
 </template>
 <style>
@@ -35,54 +41,60 @@
   margin-bottom: 50px;
 }
 </style>
-<script>
+<script setup>
 import * as signalR from "@microsoft/signalr";
+import Room from "../components/Room.vue";
+import { onMounted, ref } from "vue";
 
-export default {
-  data() {
-    return {
-      connection: null,
-      messages: [],
-      roomName: "",
-      roomPassword: "",
-      message: "",
-    };
-  },
-  mounted() {
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:7090/chatHub")
-      .build();
+const connection = ref(null);
+const roomName = ref("");
+const roomPassword = ref("");
+const roomCreated = ref(false);
+const messages = ref([]);
+const message = ref("");
+const roomId = ref(0);
+const numOfPeople = ref(0);
 
-    this.connection
-      .start()
-      .catch((err) => console.error("Error while starting connection: " + err));
+onMounted(() => {
+  connection.value = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:7090/chatHub")
+    .build();
 
-    this.connection.on("ReceiveMessage", (user, message) => {
-      this.messages.push(`${user}: ${message}`);
-    });
+  connection.value
+    .start()
+    .catch((err) => console.error("Error while starting connection: " + err));
 
-    this.connection.on("RoomCreated", (room) => {
-      alert(`Created and joined room: ${room}`);
-    });
+  connection.value.on("ReceiveMessage", (user, message) => {
+    messages.value.push(`${user}: ${message}`);
+  });
 
-    this.connection.on("JoinedRoom", (room) => {
-      alert(`Joined room: ${room}`);
-    });
+  connection.value.on("RoomCreated", (room) => {
+    console.log(room);
+    roomCreated.value = true;
+    roomName.value = room.name;
+    roomId.value = room.roomId;
+    numOfPeople.value = room.roomParticipants;
+    console.log(roomName.value);
+  });
 
-    this.connection.on("Error", (error) => {
-      alert(error);
-    });
-  },
-  methods: {
-    createRoom() {
-      this.connection.invoke("CreateRoom", this.roomName, this.roomPassword);
-    },
-    joinRoom() {
-      this.connection.invoke("JoinRoom", this.roomName, this.roomPassword);
-    },
-    sendMessage() {
-      this.connection.invoke("SendMessageToRoom", this.roomName, this.message);
-    },
-  },
+  connection.value.on("JoinedRoom", (room) => {
+    alert(`Joined room: ${room}`);
+  });
+
+  connection.value.on("Error", (error) => {
+    alert(error);
+  });
+});
+
+const createRoom = () => {
+  connection.value.invoke("CreateRoom", roomName.value, roomPassword.value);
+};
+
+const joinRoom = () => {
+  connection.value.invoke("JoinRoom", roomName.value, roomPassword.value);
+};
+
+const sendMessage = () => {
+  connection.value.invoke("SendMessageToRoom", roomName.value, message.value);
 };
 </script>
