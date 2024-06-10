@@ -47,8 +47,14 @@ namespace Kingdom.Models
                 if (room.Password == password)
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-                    await Clients.Caller.SendAsync("JoinedRoom", roomName);
-                    await Clients.Group(roomName).SendAsync("ReceiveMessage", "System", $"{Context.ConnectionId} has joined the room.");
+                    CreatedRoom createdRoom = new CreatedRoom()
+                    {
+                        Name = roomName,
+                        RoomId = Context.ConnectionId,
+                        RoomParticipants = UserHandler.ConnectedIds.Count
+                    };
+                    await Clients.Caller.SendAsync("JoinedRoom", createdRoom);
+                    await Clients.Group(roomName).SendAsync("ReceiveMessage", createdRoom);
                 }
                 else
                 {
