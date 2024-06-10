@@ -10,6 +10,9 @@
   padding: 40px;
   @apply flex flex-col items-center;
 }
+.JoinedRoom {
+  @apply flex flex-col items-center;
+}
 .room input {
   margin: 10px;
 }
@@ -18,6 +21,11 @@ img {
   max-width: 100%;
   height: 200px;
   margin: 40px;
+}
+
+.roleImage {
+  height: 400px;
+  @apply flex flex-col items-center;
 }
 
 .button {
