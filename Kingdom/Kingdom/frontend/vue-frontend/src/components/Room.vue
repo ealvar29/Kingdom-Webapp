@@ -10,6 +10,8 @@ const props = defineProps({
 const randomRoles = () => {
   showRole.value = true;
   let randomNum = Math.floor(Math.random() * 6);
+  var roles = [1, 2, 3, 4, 5, 6];
+
   switch (randomNum) {
     case 1:
       roleImage.value = "/src/assets/Plains.jpg";
@@ -40,8 +42,6 @@ const randomRoles = () => {
       roleImage.value = "/src/assets/king.jpg"; // Set a default image
       roleDescription.value = "No specific role assigned.";
   }
-  console.log(roleDescription);
-  console.log(randomNum);
 };
 
 let connection = null;
@@ -54,14 +54,18 @@ let numOfPeople = props.numOfPeople;
 let showRole = ref(false);
 let roleImage = ref("./assets/Plains.jpg"); // Initial default image
 let roleDescription = ref("");
+randomRoles();
 </script>
 
 <template>
-  <div class="room">
-    <p>You are in the room {{ roomName }}</p>
-    <p>{{ numOfPeople }}</p>
-    <button @click="randomRoles" class="button bg-red-700">Get Role</button>
-  </div>
+  <!--
+    <div class="room">
+        <p>You are in the room {{ roomName }}</p>
+        <p>{{ numOfPeople }}</p>
+        <button @click="randomRoles" class="button bg-red-700">Get Role</button>
+      </div>
+    -->
+
   <div v-if="showRole" class="JoinedRoom">
     <img :src="roleImage" alt="Role Image" class="roleImage" />
     <p>{{ roleDescription }}</p>

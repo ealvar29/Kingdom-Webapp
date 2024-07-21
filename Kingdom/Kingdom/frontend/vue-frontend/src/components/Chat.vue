@@ -22,9 +22,7 @@
     </div>
   </div>
   <div class="room">
-    <p class="text-red-500">Room Created? : {{ roomCreated }}</p>
     <p>Number of people: {{ numOfPeople }}</p>
-    <p>Room Id: {{ roomId }}</p>
   </div>
   <div v-if="roomCreated">
     <Room :roomName="roomName" :numOfPeople="numOfPeople" />
