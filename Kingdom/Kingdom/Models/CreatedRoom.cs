@@ -5,5 +5,6 @@
         public string RoomId { get; set; }
         public string Name { get; set; }
         public int RoomParticipants { get; set; }
+        public int NumberOfPlayers { get; set; }
     }
 }

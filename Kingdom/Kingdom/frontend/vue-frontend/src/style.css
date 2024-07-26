@@ -2,13 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
-  @apply flex flex-col items-center;
-}
-
 .room {
   padding: 5px;
-  @apply flex flex-col items-center;
+  @apply flex flex-col items-center  my-10;
 }
 .JoinedRoom {
   @apply flex flex-row items-center;
@@ -16,7 +12,7 @@
   margin: 0px 30px;
 }
 .JoinedRoom p {
-  font-size: 30px;
+  font-size: 15px;
 }
 .room input {
   margin: 10px;
@@ -39,14 +35,25 @@ img {
 
 .magicBackground {
   @apply container h-dvh rounded-lg;
-  @apply bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500;
+  @apply bg-gradient-to-r from-white to-gray-400;
   margin: 5px;
 }
 .container {
-  @apply flex flex-row;
+  @apply flex flex-row items-center;
   justify-content: center;
 }
 
 .signup {
   @apply container h-dvh;
+  flex-direction: column;
+}
+
+.mtgImage {
+  height: 700px;
+  width: 500px;
+  border-radius: 10%;
+}
+
+.logos {
+  @apply flex flex-row;
 }

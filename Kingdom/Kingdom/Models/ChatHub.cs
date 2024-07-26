@@ -25,17 +25,18 @@ namespace Kingdom.Models
 
         }
 
-        public async Task CreateRoom(string roomName, string password)
+        public async Task CreateRoom(string roomName, string password, int numOfPlayers)
         {
             OnConnectedAsync();
-            var chatRoom = new ChatRoom { RoomName = roomName, Password = password };
+            var chatRoom = new ChatRoom { RoomName = roomName, Password = password, Players = numOfPlayers };
             chatRooms.TryAdd(roomName, chatRoom);
             await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
             CreatedRoom createdRoom = new CreatedRoom()
             {
                 Name = roomName,
                 RoomId = Context.ConnectionId,
-                RoomParticipants = UserHandler.ConnectedIds.Count
+                RoomParticipants = UserHandler.ConnectedIds.Count,
+                NumberOfPlayers = numOfPlayers
             };
             await Clients.Caller.SendAsync("RoomCreated", createdRoom);
         }

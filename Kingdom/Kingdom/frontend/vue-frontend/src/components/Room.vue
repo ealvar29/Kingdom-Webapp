@@ -1,18 +1,30 @@
 <script setup>
 import { defineProps, ref } from "vue";
-import * as signalR from "@microsoft/signalr";
 
 const props = defineProps({
   roomName: String,
-  numOfPeople: Number,
+  numberOfPlayers: Number,
+  playerCount: Number,
 });
 
-const randomRoles = () => {
+let roomName = props.roomName;
+let numberOfPlayers = props.numberOfPlayers;
+let showRole = ref(false);
+let roleImage = ref(""); // Initial default image
+let roleDescription = ref("");
+var roles = [1, 2, 3, 3, 5];
+var randomRole = roles[Math.floor(Math.random() * roles.length)];
+// grab random number and splice it from the array
+const roleToRemove = roles.indexOf(randomRole);
+if (roleToRemove > -1) {
+  roles.splice(roleToRemove, 1);
+  console.log(roles);
+}
+console.log(randomRole);
+Roles(randomRole);
+const Roles = (randomRole) => {
   showRole.value = true;
-  let randomNum = Math.floor(Math.random() * 6);
-  var roles = [1, 2, 3, 4, 5, 6];
-
-  switch (randomNum) {
+  switch (randomRole) {
     case 1:
       roleImage.value = "/src/assets/Plains.jpg";
       roleDescription.value =
@@ -39,25 +51,17 @@ const randomRoles = () => {
         "The Assassin (Swamp) - The Assassin has one of the trickier goals; to be the last person standing. Although this is functionally identical to the King/Queen, the Assassin must be careful as to when they target each player. Kill the Knight too early and you risk the Bandits taking out the King/Queen. Kill the King/Queen too early and the Bandits win. No other special rules apply.";
       break;
     default:
-      roleImage.value = "/src/assets/king.jpg"; // Set a default image
-      roleDescription.value = "No specific role assigned.";
+      roleImage.value = "";
+      roleDescription.value = "No Role";
+      break;
   }
 };
-
-let connection = null;
-let messages = [];
-let roomName = props.roomName;
-let roomPassword = "";
-let message = "";
-let roomCreated = false;
-let numOfPeople = props.numOfPeople;
-let showRole = ref(false);
-let roleImage = ref("./assets/Plains.jpg"); // Initial default image
-let roleDescription = ref("");
-randomRoles();
+console.log(props);
 </script>
 
 <template>
+  <p>Room Name {{ roomName }}</p>
+  <p>Number of Players {{ props.numberOfPlayers }}</p>
   <!--
     <div class="room">
         <p>You are in the room {{ roomName }}</p>

@@ -1,31 +1,51 @@
 <template>
   <div v-if="!roomCreated" class="">
     <div class="room flex flex-col">
-      <input class="border-2" placeholder="Enter room name" />
+      <input
+        class="border-2"
+        placeholder="Enter room name"
+        v-model="roomName"
+      />
       <input
         class="border-2"
         type="password"
         placeholder="Enter room password"
+        v-model="roomPassword"
+      />
+      <p>Number of Players</p>
+      <input
+        class="border-2"
+        type="number"
+        placeholder="Number of Players"
+        v-model="numberOfPlayers"
       />
       <button class="button bg-blue-700" @click="createRoom">
         Create Room
       </button>
     </div>
     <div class="room">
-      <input class="border-2" type="password" placeholder="Enter room name" />
+      <input
+        class="border-2"
+        type="password"
+        placeholder="Enter room name"
+        v-model="joinedRoomName"
+      />
       <input
         class="border-2"
         type="password"
         placeholder="Enter room password"
+        v-model="joinedRoomPassword"
       />
       <button class="button bg-green-700" @click="joinRoom">Join Room</button>
     </div>
   </div>
-  <div class="room">
-    <p>Number of people: {{ numOfPeople }}</p>
-  </div>
+  <div class="room"></div>
   <div v-if="roomCreated">
-    <Room :roomName="roomName" :numOfPeople="numOfPeople" />
+    <Room
+      :roomName="roomName"
+      :playerCount="playerCount"
+      :numberOfPlayers="numberOfPlayers"
+    />
   </div>
 </template>
 <script setup>
@@ -36,11 +56,13 @@ import { onMounted, ref } from "vue";
 const connection = ref(null);
 const roomName = ref("");
 const roomPassword = ref("");
+const joinedRoomName = ref("");
+const joinedRoomPassword = ref("");
 const roomCreated = ref(false);
 const messages = ref([]);
-const message = ref("");
 const roomId = ref(0);
-const numOfPeople = ref(0);
+const playerCount = ref(0);
+const numberOfPlayers = ref(0);
 
 onMounted(() => {
   connection.value = new signalR.HubConnectionBuilder()
@@ -49,27 +71,33 @@ onMounted(() => {
 
   connection.value
     .start()
-    .catch((err) => console.error("Error while starting connection: " + err));
+    .then(() => {
+      console.log("Connection started");
+    })
+    .catch((err) => {
+      console.error("Error while starting connection: " + err);
+    });
 
   connection.value.on("ReceiveMessage", (user, message) => {
     messages.value.push(`${user}: ${message}`);
   });
 
   connection.value.on("RoomCreated", (room) => {
-    console.log(room);
+    console.log(room, "RoomCreated");
     roomCreated.value = true;
     roomName.value = room.name;
     roomId.value = room.roomId;
-    numOfPeople.value = room.roomParticipants;
-    console.log(roomName.value);
+    numberOfPlayers.value = room.numberOfPlayers;
+    playerCount.value = room.roomParticipants;
   });
 
   connection.value.on("JoinedRoom", (room) => {
-    console.log(room);
+    console.log(room, "JoinedRoom");
     roomCreated.value = true;
     roomName.value = room.name;
+    numberOfPlayers.value = room.numberOfPlayers;
     roomId.value = room.roomId;
-    numOfPeople.value = room.roomParticipants;
+    playerCount.value = room.roomParticipants;
     console.log(roomName.value);
   });
 
@@ -79,14 +107,22 @@ onMounted(() => {
 });
 
 const createRoom = () => {
-  connection.value.invoke("CreateRoom", roomName.value, roomPassword.value);
+  console.log(roomName.value);
+  console.log(roomPassword.value);
+  console.log(numberOfPlayers.value);
+  connection.value.invoke(
+    "CreateRoom",
+    roomName.value,
+    roomPassword.value,
+    numberOfPlayers.value
+  );
 };
 
 const joinRoom = () => {
-  connection.value.invoke("JoinRoom", roomName.value, roomPassword.value);
-};
-
-const sendMessage = () => {
-  connection.value.invoke("SendMessageToRoom", roomName.value, message.value);
+  connection.value.invoke(
+    "JoinRoom",
+    joinedRoomName.value,
+    joinedRoomPassword.value
+  );
 };
 </script>
