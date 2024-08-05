@@ -45,9 +45,11 @@
       :roomName="roomName"
       :playerCount="playerCount"
       :numberOfPlayers="numberOfPlayers"
+      :role="role"
     />
   </div>
 </template>
+
 <script setup>
 import * as signalR from "@microsoft/signalr";
 import Room from "../components/Room.vue";
@@ -63,6 +65,7 @@ const messages = ref([]);
 const roomId = ref(0);
 const playerCount = ref(0);
 const numberOfPlayers = ref(0);
+const role = ref("");
 
 onMounted(() => {
   connection.value = new signalR.HubConnectionBuilder()
@@ -99,6 +102,11 @@ onMounted(() => {
     roomId.value = room.roomId;
     playerCount.value = room.roomParticipants;
     console.log(roomName.value);
+  });
+
+  connection.value.on("ReceiveRole", (assignedRole) => {
+    role.value = assignedRole;
+    console.log("Assigned role:", assignedRole);
   });
 
   connection.value.on("Error", (error) => {
