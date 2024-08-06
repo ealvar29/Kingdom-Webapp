@@ -1,5 +1,4 @@
 using Kingdom.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5173") // Frontend application origin
+            builder.WithOrigins("http://localhost:5173", "https://kingdom-api.azurewebsites.net") // Add Azure URL
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();
@@ -30,7 +29,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.MapHub<ChatHub>("/chatHub");
-
 
 app.UseHttpsRedirection();
 
