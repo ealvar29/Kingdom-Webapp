@@ -12,13 +12,13 @@
         placeholder="Enter room password"
         v-model="roomPassword"
       />
-      <p>Number of Players</p>
+      <!-- <p>Number of Players</p>
       <input
         class="border-2"
         type="number"
         placeholder="Number of Players"
         v-model="numberOfPlayers"
-      />
+      /> -->
       <button class="button bg-blue-700" @click="createRoom">
         Create Room
       </button>
@@ -66,11 +66,10 @@ const roomId = ref(0);
 const playerCount = ref(0);
 const numberOfPlayers = ref(0);
 const role = ref("");
-
+const local = "https://localhost:7090/chatHub";
+const netlify = "https://kingdom-api.azurewebsites.net/chatHub";
 onMounted(() => {
-  connection.value = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7090/chatHub")
-    .build();
+  connection.value = new signalR.HubConnectionBuilder().withUrl(local).build();
 
   connection.value
     .start()
@@ -115,6 +114,7 @@ onMounted(() => {
 });
 
 const createRoom = () => {
+  numberOfPlayers.value = 5;
   console.log(roomName.value);
   console.log(roomPassword.value);
   console.log(numberOfPlayers.value);
